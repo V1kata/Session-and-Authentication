@@ -1,13 +1,19 @@
 const express = require('express');
 const hbs = require('express-handlebars');
+const cookieParser = require('cookie-parser');
 
+// set app
 const app = express();
 
+// set hbs
 app.engine('hbs', hbs.engine({
     extname: 'hbs'
 }));
 app.set('view engine', 'hbs');
-app.use(express.urlencoded({ extended: false }))
+
+// set urlencoded, coockie parser
+app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
 
 app.get('/', (req, res) => {
     res.render('home');
@@ -28,7 +34,7 @@ app.post('/login', (req, res) => {
 });
 
 app.get('/profile', (req, res) => {
-    
+
 })
 
 app.listen(5000, () => console.log('Server is running on http://localhost:5000'));
