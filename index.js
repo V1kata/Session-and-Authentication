@@ -3,6 +3,8 @@ const hbs = require('express-handlebars');
 const expressSession = require('express-session');
 const cookieParser = require('cookie-parser');
 
+const db = require('./db.json');
+
 // set app
 const app = express();
 
@@ -55,7 +57,7 @@ app.get('/register', (req, res) => {
 app.post('/register', (req, res) => {
     const { username, password } = req.body;
 
-    
+
 })
 
 app.get('/profile', (req, res) => {
