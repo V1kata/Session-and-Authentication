@@ -3,7 +3,7 @@ const hbs = require('express-handlebars');
 const expressSession = require('express-session');
 const cookieParser = require('cookie-parser');
 
-const db = require('./db.json');
+const dataServise = require('./dataServise');
 
 // set app
 const app = express();
@@ -54,10 +54,12 @@ app.get('/register', (req, res) => {
     res.render('form', { name: 'Register', endpoint: 'register'});
 });
 
-app.post('/register', (req, res) => {
+app.post('/register', async (req, res) => {
     const { username, password } = req.body;
 
+    await dataServise.registerUser(username, password);
 
+    res.redirect('/login');
 })
 
 app.get('/profile', (req, res) => {
