@@ -81,6 +81,11 @@ app.get('/profile', (req, res) => {
     res.render('profile', data);
 });
 
+app.get('/logout', (req, res) => {
+    res.clearCookie('auth');
+    res.redirect('/');
+})
+
 app.get('*', (req, res) => {
     res.render('404');
 })
