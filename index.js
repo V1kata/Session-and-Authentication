@@ -27,7 +27,7 @@ app.get('/', (req, res) => {
 });
 
 app.get('/login', (req, res) => {
-    res.render('login');
+    res.render('form', { name: 'Login', endpoint: 'login'});
 })
 
 app.post('/login', (req, res) => {
@@ -48,6 +48,16 @@ app.post('/login', (req, res) => {
     res.redirect('/');
 });
 
+app.get('/register', (req, res) => {
+    res.render('form', { name: 'Register', endpoint: 'register'});
+});
+
+app.post('/register', (req, res) => {
+    const { username, password } = req.body;
+
+    
+})
+
 app.get('/profile', (req, res) => {
     const authData = req.cookies['auth'];
 
@@ -56,6 +66,7 @@ app.get('/profile', (req, res) => {
     }
 
     const data = JSON.parse(authData);
+    // console.log(req.session)
 
     res.render('profile', data);
 });
