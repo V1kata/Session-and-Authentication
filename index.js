@@ -2,6 +2,7 @@ const express = require('express');
 const hbs = require('express-handlebars');
 const expressSession = require('express-session');
 const cookieParser = require('cookie-parser');
+const jwt = require('jsonwebtoken');
 
 const dataServise = require('./dataServise');
 
@@ -36,17 +37,9 @@ app.post('/login', async (req, res) => {
     const { username, password } = req.body;
 
     try {
-        const user = await dataServise.loginUser(username, password);
-
-        const data = {
-            username: user.username,
-            password: user.password,
-            privateInfo: 'some private info'
-        }
+        const token = await dataServise.loginUser(username, password);
     
-        res.cookie('auth', JSON.stringify(data));
-        req.session.username = username;
-        req.session.secret = data.privateInfo;
+        res.cookie('token', token, { httpOnly: true });
 
         res.redirect('/');
         return;
@@ -69,20 +62,20 @@ app.post('/register', async (req, res) => {
 })
 
 app.get('/profile', (req, res) => {
-    const authData = req.cookies['auth'];
+    const token = req.cookies['token'];
 
-    if (!authData) {
+    if (!token) {
         return res.redirect('/404');
     }
 
-    const data = JSON.parse(authData);
-    // console.log(req.session)
+    const data = jwt.verify(token, 'myveryverysecret');
+    console.log(data)
 
-    res.render('profile', data);
+    res.render('profile', { username: data.username });
 });
 
 app.get('/logout', (req, res) => {
-    res.clearCookie('auth');
+    res.clearCookie('token');
     res.redirect('/');
 })
 
