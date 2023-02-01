@@ -32,22 +32,28 @@ app.get('/login', (req, res) => {
     res.render('form', { name: 'Login', endpoint: 'login'});
 })
 
-app.post('/login', (req, res) => {
+app.post('/login', async (req, res) => {
     const { username, password } = req.body;
 
-    if (username !== 'V1kata' && password !== '123') {
-        res.redirect('/404');
-    }
+    try {
+        const user = await dataServise.loginUser(username, password);
 
-    const data = {
-        username,
-        privateInfo: 'some private info'
-    }
+        const data = {
+            username: user.username,
+            password: user.password,
+            privateInfo: 'some private info'
+        }
+    
+        res.cookie('auth', JSON.stringify(data));
+        req.session.username = username;
+        req.session.secret = data.privateInfo;
 
-    res.cookie('auth', JSON.stringify(data));
-    req.session.username = username;
-    req.session.secret = data.privateInfo;
-    res.redirect('/');
+        res.redirect('/');
+        return;
+    } catch(err) {
+        console.log(err.message);
+        res.status(401).end();
+    }
 });
 
 app.get('/register', (req, res) => {

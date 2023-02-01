@@ -23,3 +23,19 @@ exports.registerUser = async (username, password) => {
 
     await saveDb();
 }
+
+exports.loginUser = async (username, password) => {
+    const user = db.users.find(x => x.username == username);
+
+    if (!user) {
+        throw new Error('There is no username or password');
+    }
+
+    const passMatch = await bcrypt.compare(password, user.password);
+
+    if (!passMatch) {
+        throw new Error('There is no username or password');
+    }
+
+    return user;
+}
